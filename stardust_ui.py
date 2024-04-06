@@ -1,12 +1,10 @@
 import sys
-# import os
 from datetime import datetime
 from itertools import count
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import psutil
-# import requests
 from matplotlib.animation import FuncAnimation
 from matplotlib.backends.backend_qt5agg import \
     FigureCanvasQTAgg as FingureCanvas
@@ -14,162 +12,409 @@ from PyQt5 import QtGui, uic
 from PyQt5.QtCore import QTimer, QUrl
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import *
-class UI(QMainWindow) :
+
+
+# Define the UI class which inherits from QMainWindow
+class UI(QMainWindow):
+    # Initialize the UI
     def __init__(self):
-        super(UI  ,self).__init__()
-        uic.loadUi("stardust_ui.ui"  ,self)
+        super(UI, self).__init__()
+        # Load the UI file
+        uic.loadUi("stardust_ui.ui", self)
+        # Set window title and icon
         self.setWindowTitle("S.T.A.R.D.U.S.T")
         self.setWindowIcon(QtGui.QIcon('icons\\black.png'))
-        self.time=self.findChild(QLCDNumber  ,"time")
-        self.timer=QTimer()
+        
+        # Find and initialize UI elements
+        # Set up a timer for updating the time
+        self.time = self.findChild(QLCDNumber, "time")
+        self.timer = QTimer()
         self.timer.timeout.connect(self.lcd_num)
         self.timer.start(100)
         self.lcd_num()
-
-        self.graph=self.findChild(QFrame  ,"frame")
-        self.horizontaLayout=QHBoxLayout(self.graph)
+        
+        # Set up the graph display
+        self.graph = self.findChild(QFrame, "frame")
+        self.horizontaLayout = QHBoxLayout(self.graph)
         self.horizontaLayout.setObjectName("horizontaLayout")
-        self.figure=plt.figure()
-        self.canvas=FingureCanvas(self.figure)
+        self.figure = plt.figure()
+        self.canvas = FingureCanvas(self.figure)
         self.horizontaLayout.addWidget(self.canvas)
         self.PlotOnCanvas()
-
-        self.gps=self.findChild(QLabel  ,"gps_pics")
-        # key=AIzaSyDaeKlbjo69f-dMB03MABOg7iz3i_Rl5Q4
-        # url = "https://maps.googleapis.com/maps/api/staticmap?center=13.0226992  ,77.5733936&zoom=13&size=600x300&maptype=roadmap&key=&"#.format(13.0226992  ,77.5733936)
-        # response = requests.get(url)
-        # pixmap = QPixmap()
-        # pixmap.loadFromData(response.content)
-        # self.gps.setPixmap(pixmap)
-    #     else:
-    # Display an error message if the pixmap could not be loaded
-        # self.gps.setText("Error: Could not load map")
-        # self.gps.setPixmap(pixmap)
+        
+        # Set up the GPS display
+        self.gps = self.findChild(QLabel, "gps_pics")
         self.view = QWebEngineView()
         self.view.setUrl(QUrl("https://maps.google.com/maps?q=&api=AIzaSyDaeKlbjo69f-dMB03MABOg7iz3i_Rl5Q4"))
-        self.horizontaLayout=QHBoxLayout(self.gps)
-        self.horizontaLayout.setObjectName("horizontaLayou")
+        self.horizontaLayout = QHBoxLayout(self.gps)
+        self.horizontaLayout.setObjectName("horizontaLayout")
         self.horizontaLayout.addWidget(self.view)
-
-        self.raw_data=self.findChild(QLabel  ,"raw_data")
+        
+        # Set up display for raw data
+        self.raw_data = self.findChild(QLabel, "raw_data")
         self.timer1 = QTimer()
-        self.timer1.timeout.connect(self.raw_data_info)
         self.timer1.start(1000)
-
-        self.battery=self.findChild(QProgressBar  ,"battery")
-        self.battery.setRange(0  , 100)
-
-        self.button=self.findChild(QPushButton  ,"button_1")
+        
+        # Set up battery display
+        self.battery = self.findChild(QProgressBar, "battery")
+        self.timer1.timeout.connect(self.battery_update)
+        self.battery.setRange(0, 100)
+        
+        # Set up button click event
+        self.button = self.findChild(QPushButton, "button_1")
         self.button.clicked.connect(self.on_button_click)
-
-        self.open_dial=self.findChild(QPushButton  ,"open_dialbox")
+        
+        # Set up expanded view button event
+        self.open_dial = self.findChild(QPushButton, "open_dialbox")
         self.open_dial.clicked.connect(self.expanded)
+        
+        # Set up more data display
+        self.more_data = self.findChild(QLabel,"more_data")
+        self.timer1.timeout.connect(self.more_data_update)
+        
+        # Set up status display
+        self.status = self.findChild(QLabel, "status")
+        self.timer1.timeout.connect(self.update_status)
+        
+        # Show the UI
         self.showMaximized()
     
+    # Update the LCD number with current time
     def lcd_num(self):
-        time=datetime.now()
-        formatted_time=time.strftime("%H:%M:%S:%f")
+        time = datetime.now()
+        formatted_time = time.strftime("%H:%M:%S:%f")
         self.time.setDigitCount(15)
         self.time.setSegmentStyle(QLCDNumber.Flat)
         self.time.display(formatted_time)
     
+    # Plot data on canvas
     def PlotOnCanvas(self):
+        # Define lists for x and y values
         self.x_vals = []
         self.y_vals = []
         plt.plot()
         self.index = count()
         plt.style.use('seaborn-whitegrid')
+        
+        # Define animation function
         def animate(i):
             global data
             data = pd.read_csv('data.csv')
-            global x 
-            x= data.tail(20)['x_value']
-            y1 = data.tail(20)['total_1']
+            global x
+            # Clear axes
             self.ax.cla()
-            self.ax.plot(x, y1, label="two")
-            y9 = data.tail(20)['total_2']
-            self.ax.plot(x, y9, label="one")
-            y7 = data.tail(20)['total_3']
-            self.ax.plot(x, y7, label="three")
-            self.ax.set(xlabel='x-axis'  , ylabel='Pressure')
+            # Plot acceleration data
+            x = data.tail(20)['x_value']
+            acc_x = data.tail(20)['total_1']
+            self.ax.plot(x, acc_x, label="Acc_x")
+            acc_y = data.tail(20)['total_2']
+            self.ax.plot(x, acc_y, label="Acc_y")
+            acc_z = data.tail(20)['total_3']
+            self.ax.plot(x, acc_z, label="Acc_z")
+            self.ax.set(xlabel='x-axis', ylabel='Acceleration')
             self.ax.legend()
             
-            y2 = data.tail(20)['total_2']
+            # Plot analog temperature data
             self.ax1.cla()
-            self.ax1.plot(x, y2, label="two")
-            y9 = data.tail(20)['total_1']
-            self.ax1.plot(x, y9, label="three")
-            y9 = data.tail(20)['total_3']
-            self.ax1.plot(x, y9, label="three")
+            mag_x = data.tail(20)['total_2']
+            self.ax1.plot(x, mag_x, label="Mag_x")
+            mag_y = data.tail(20)['total_1']
+            self.ax1.plot(x, mag_y, label="Mag_y")
+            mag_z = data.tail(20)['total_3']
+            self.ax1.plot(x, mag_z, label="Mag_z")
             self.ax1.set(xlabel='x-axis', ylabel='Analog Temperature')
             self.ax1.legend()
             
-            
-            y3=data.tail(20)["total_1"]
+            # Plot gyro data
             self.ax2.cla()
-            self.ax2.plot(x, y1, label="two")
-            y9 = data.tail(20)['total_2']
-            self.ax2.plot(x, y9, label="one")
-            y7 = data.tail(20)['total_3']
-            self.ax2.plot(x, y7, label="three")
-            self.ax2.set(xlabel='x-axis'  , ylabel='Humidity')
+            gyro_x = data.tail(20)["total_1"]
+            self.ax2.plot(x, gyro_x, label="gyro_x")
+            gyro_y = data.tail(20)['total_2']
+            self.ax2.plot(x, gyro_y, label="gyro_y")
+            gyro_z = data.tail(20)['total_3']
+            self.ax2.plot(x, gyro_z, label="gyro_z")
+            self.ax2.set(xlabel='x-axis', ylabel='...')
             self.ax2.legend()
             
-            
-            y4=data.tail(20)["total_1"]
+            # Plot velocity data
             self.ax3.cla()
-            y9 = data.tail(20)['total_2']
-            self.ax3.plot(x, y9, label="one")
-            y7 = data.tail(20)['total_3']
-            self.ax3.plot(x, y7, label="three")
-            self.ax3.plot(x  ,y3  ,label="two")
-            self.ax3.set(xlabel='x-axis'  , ylabel='Temperature')
+            vel_x = data.tail(20)["total_1"]
+            vel_y = data.tail(20)['total_2']
+            self.ax3.plot(x, vel_x, label="Vel_x")
+            vel_z = data.tail(20)['total_3']
+            self.ax3.plot(x, vel_y, label="Vel_y")
+            self.ax3.plot(x, vel_z, label="Vel_z")
+            self.ax3.set(xlabel='x-axis', ylabel='')
             self.ax3.legend()
             
+            # Plot humidity and pressure data
             self.ax4.cla()
-            y9 = data.tail(20)['total_2']
-            self.ax4.plot(x, y9, label="one")
-            self.ax4.plot(x  ,y7  ,label="two")
-            self.ax4.set(xlabel='x-label'  , ylabel='y-label')
+            humidity = data.tail(20)['total_2']
+            self.ax4.plot(x, humidity, label="Humidity")
+            pressure = data.tail(20)['total_3']
+            self.ax4.plot(x, pressure, label="Pressure")
+            self.ax4.set(xlabel='x-label', ylabel='y-label')
             self.ax4.legend()
             
+            # Plot gas data
             self.ax5.cla()
-            y9 = data.tail(20)['total_2']
-            self.ax5.plot(x  ,y2  ,label="two")
-            self.ax5.set(xlabel='x-label'  , ylabel='y-label')
+            gasR = data.tail(20)['total_2']
+            self.ax5.plot(x, gasR, label="two")
+            self.ax5.set(xlabel='x-label', ylabel='y-label')
             self.ax5.legend()
-
-        self.ani=FuncAnimation(plt.gcf(),animate,interval=1000)
-        self.ax=plt.subplot(231)
-        self.ax.set(xlabel='x-label'  , ylabel='y-label')
-        self.ax1=plt.subplot(232)
-        self.ax1.set(xlabel='x-label'  , ylabel='y-label')
-        self.ax2=plt.subplot(233)
-        self.ax2.set(xlabel='x-label'  , ylabel='y-label')
-        self.ax3=plt.subplot(234)
-        self.ax3.set(xlabel='x-label'  , ylabel='y-label')
-        self.ax4=plt.subplot(235)
-        self.ax4.set(xlabel='x-label'  , ylabel='y-label')
-        self.ax5=plt.subplot(236)
-        self.ax5.set(xlabel='x-label'  , ylabel='y-label')
+        
+        # Create animation
+        self.ani = FuncAnimation(plt.gcf(), animate, interval=1000)
+        self.ax = plt.subplot(231)
+        self.ax.set(xlabel='x-label', ylabel='y-label')
+        self.ax1 = plt.subplot(232)
+        self.ax1.set(xlabel='x-label', ylabel='y-label')
+        self.ax2 = plt.subplot(233)
+        self.ax2.set(xlabel='x-label', ylabel='y-label')
+        self.ax3 = plt.subplot(234)
+        self.ax3.set(xlabel='x-label', ylabel='y-label')
+        self.ax4 = plt.subplot(235)
+        self.ax4.set(xlabel='x-label', ylabel='y-label')
+        self.ax5 = plt.subplot(236)
+        self.ax5.set(xlabel='x-label', ylabel='y-label')
         plt.tight_layout()
         self.canvas.draw()
+
+    # Function to update more data
+    def more_data_update(self):
+        latest_data = None
+        latest_data = pd.read_csv('data.csv')
+        latest_data = latest_data.tail(1)  # Get the latest row
+        if not latest_data.empty:  # Check if DataFrame is not empty
+            # Extract values from the latest row
+            x_value = latest_data['x_value'].values[0]
+            total_1 = latest_data['total_1'].values[0]
+            total_2 = latest_data['total_2'].values[0]
+            status_text = (f'''Status:
+Shunt Voltage (V): {x_value}    Pack Voltage: {total_2} 
+Current (mA): {total_1}         Bottom Voltage (V):{total_2} 
+Bus Voltage (V): {total_2}      Top Voltage (V): {total_2}
+Power (mW):{total_1}''')
+            self.more_data.setText(status_text)
     
-    def raw_data_info(self):
+    # Function to update battery status
+    def battery_update(self):
         battery = psutil.sensors_battery()
         battery_percentage = battery.percent
         self.battery.setValue(battery_percentage)
-
+    
+    # Function to update status display
+    def update_status(self):
+        latest_data = None
+        latest_data = pd.read_csv('data.csv')
+        latest_data = latest_data.tail(1)  # Get the latest row
+        if not latest_data.empty:  # Check if DataFrame is not empty
+            # Extract values from the latest row
+            x_value = latest_data['x_value'].values[0]
+            total_1 = latest_data['total_1'].values[0]
+            total_2 = latest_data['total_2'].values[0]
+            status_text = (f'''Status:
+Shunt Voltage (V): {x_value}    Pack Voltage: {total_2} 
+Current (mA): {total_1}         Bottom Voltage (V):{total_2} 
+Bus Voltage (V): {total_2}      Top Voltage (V): {total_2}
+Power (mW):{total_1}''')
+            self.status.setText(status_text)
+    
+    # Function for button click event
     def on_button_click(self):
         print("STARDUST")
 
+    # Function for expanded view button event
     def expanded(self):
-        self.hlayout=self.findChild(QHBoxLayout  ,"horizontalLayout_4")
+        self.hlayout = self.findChild(QHBoxLayout, "horizontalLayout_4")
         if self.open_dial.isChecked():
-            self.hlayout.setStretch(0,0)
+            self.hlayout.setStretch(0, 0)
         else:
-            self.hlayout.setStretch(0,50)
+            self.hlayout.setStretch(0, 50)
 
-app=QApplication(sys.argv)
-UIWindow=UI()
-app.exec_()
+# Main block
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    UIWindow = UI()
+    app.exec_()
+
+
+
+# class UI(QMainWindow) :
+#     def __init__(self):
+#         super(UI  ,self).__init__()
+#         uic.loadUi("stardust_ui.ui"  ,self)
+#         self.setWindowTitle("S.T.A.R.D.U.S.T")
+#         self.setWindowIcon(QtGui.QIcon('icons\\black.png'))
+#         self.time=self.findChild(QLCDNumber  ,"time")
+#         self.timer=QTimer()
+#         self.timer.timeout.connect(self.lcd_num)
+#         self.timer.start(100)
+#         self.lcd_num()
+
+#         self.graph=self.findChild(QFrame  ,"frame")
+#         self.horizontaLayout=QHBoxLayout(self.graph)
+#         self.horizontaLayout.setObjectName("horizontaLayout")
+#         self.figure=plt.figure()
+#         self.canvas=FingureCanvas(self.figure)
+#         self.horizontaLayout.addWidget(self.canvas)
+#         self.PlotOnCanvas()
+
+#         self.gps=self.findChild(QLabel  ,"gps_pics")
+#         self.view = QWebEngineView()
+#         self.view.setUrl(QUrl("https://maps.google.com/maps?q=&api=AIzaSyDaeKlbjo69f-dMB03MABOg7iz3i_Rl5Q4"))
+#         self.horizontaLayout=QHBoxLayout(self.gps)
+#         self.horizontaLayout.setObjectName("horizontaLayout")
+#         self.horizontaLayout.addWidget(self.view)
+
+#         self.raw_data=self.findChild(QLabel  ,"raw_data")
+#         self.timer1 = QTimer()
+#         self.timer1.start(1000)
+
+#         self.battery=self.findChild(QProgressBar  ,"battery")
+#         self.timer1.timeout.connect(self.battery_update)
+#         self.battery.setRange(0  , 100)
+
+#         self.button=self.findChild(QPushButton  ,"button_1")
+#         self.button.clicked.connect(self.on_button_click)
+
+#         self.open_dial=self.findChild(QPushButton  ,"open_dialbox")
+#         self.open_dial.clicked.connect(self.expanded)
+        
+#         self.status=self.findChild(QLabel  ,"status")
+#         self.timer1.timeout.connect(self.update_status)
+        
+#         self.status=self.findChild(QLabel  ,"more_data")
+#         self.timer1.timeout.connect(self.more_data_update)
+        
+        
+#         self.showMaximized()
+    
+#     def lcd_num(self):
+#         time=datetime.now()
+#         formatted_time=time.strftime("%H:%M:%S:%f")
+#         self.time.setDigitCount(15)
+#         self.time.setSegmentStyle(QLCDNumber.Flat)
+#         self.time.display(formatted_time)
+    
+#     def PlotOnCanvas(self):
+#         self.x_vals = []
+#         self.y_vals = []
+#         plt.plot()
+#         self.index = count()
+#         plt.style.use('seaborn-whitegrid')
+#         def animate(i):
+#             global data
+#             data = pd.read_csv('data.csv')
+#             global x 
+#             self.ax.cla()
+#             x= data.tail(20)['x_value']
+#             acc_x = data.tail(20)['total_1']
+#             self.ax.plot(x, acc_x, label="Acc_x")
+#             acc_y = data.tail(20)['total_2']
+#             self.ax.plot(x, acc_y, label="Acc_y")
+#             acc_z = data.tail(20)['total_3']
+#             self.ax.plot(x, acc_z, label="Acc_z")
+#             self.ax.set(xlabel='x-axis'  , ylabel='Acceleration')
+#             self.ax.legend()
+            
+#             self.ax1.cla()
+#             mag_x = data.tail(20)['total_2']
+#             self.ax1.plot(x, mag_x, label="Mag_x")
+#             mag_y = data.tail(20)['total_1']
+#             self.ax1.plot(x, mag_y, label="Mag_y")
+#             mag_z = data.tail(20)['total_3']
+#             self.ax1.plot(x, mag_z, label="Mag_z")
+#             self.ax1.set(xlabel='x-axis', ylabel='Analog Temperature')
+#             self.ax1.legend()
+            
+            
+#             self.ax2.cla()
+#             gyro_x=data.tail(20)["total_1"]
+#             self.ax2.plot(x, gyro_x, label="gyro_x")
+#             gyro_y = data.tail(20)['total_2']
+#             self.ax2.plot(x, gyro_y, label="gyro_y")
+#             gyro_z = data.tail(20)['total_3']
+#             self.ax2.plot(x, gyro_z, label="gyro_z")
+#             self.ax2.set(xlabel='x-axis'  , ylabel='...')
+#             self.ax2.legend()
+            
+            
+#             self.ax3.cla()
+#             vel_x = data.tail(20)["total_1"]
+#             vel_y = data.tail(20)['total_2']
+#             self.ax3.plot(x, vel_x, label="Vel_x")
+#             vel_z = data.tail(20)['total_3']
+#             self.ax3.plot(x, vel_y, label="Vel_y")
+#             self.ax3.plot(x  ,vel_z  ,label="Vel_z")
+#             self.ax3.set(xlabel='x-axis'  , ylabel='')
+#             self.ax3.legend()
+            
+#             self.ax4.cla()
+#             humidity = data.tail(20)['total_2']
+#             self.ax4.plot(x, humidity, label="Humidity")
+#             pressure = data.tail(20)['total_3']
+#             self.ax4.plot(x  , pressure ,label="Pressure")
+#             self.ax4.set(xlabel='x-label'  , ylabel='y-label')
+#             self.ax4.legend()
+            
+#             self.ax5.cla()
+#             gasR = data.tail(20)['total_2']
+#             self.ax5.plot(x,gasR,label="two")
+#             self.ax5.set(xlabel='x-label', ylabel='y-label')
+#             self.ax5.legend()
+
+#         self.ani=FuncAnimation(plt.gcf(),animate,interval=1000)
+#         self.ax=plt.subplot(231)
+#         self.ax.set(xlabel='x-label'  , ylabel='y-label')
+#         self.ax1=plt.subplot(232)
+#         self.ax1.set(xlabel='x-label'  , ylabel='y-label')
+#         self.ax2=plt.subplot(233)
+#         self.ax2.set(xlabel='x-label'  , ylabel='y-label')
+#         self.ax3=plt.subplot(234)
+#         self.ax3.set(xlabel='x-label'  , ylabel='y-label')
+#         self.ax4=plt.subplot(235)
+#         self.ax4.set(xlabel='x-label'  , ylabel='y-label')
+#         self.ax5=plt.subplot(236)
+#         self.ax5.set(xlabel='x-label'  , ylabel='y-label')
+#         plt.tight_layout()
+#         self.canvas.draw()
+        
+#     def more_data_update(self):
+#         pass
+        
+#     def battery_update(self):
+#         battery = psutil.sensors_battery()
+#         battery_percentage = battery.percent
+#         self.battery.setValue(battery_percentage)
+    
+#     def update_status(self):
+#         latest_data = None
+#         latest_data = pd.read_csv('data.csv')
+#         latest_data = latest_data.tail(1)  # Get the latest row
+#         if not latest_data.empty:  # Check if DataFrame is not empty
+#             # Extract values from the latest row
+#             x_value = latest_data['x_value'].values[0]
+#             total_1 = latest_data['total_1'].values[0]
+#             total_2 = latest_data['total_2'].values[0]
+#             status_text = (f'''Status:
+# Shunt Voltage (V): {x_value}    Pack Voltage: {total_2} 
+# Current (mA): {total_1}         Bottom Voltage (V):{total_2} 
+# Bus Voltage (V): {total_2}      Top Voltage (V): {total_2}
+# Power (mW):{total_1}''') 
+#             self.status.setText(status_text)
+#     def on_button_click(self):
+#         print("STARDUST")
+
+#     def expanded(self):
+#         self.hlayout=self.findChild(QHBoxLayout  ,"horizontalLayout_4")
+#         if self.open_dial.isChecked():
+#             self.hlayout.setStretch(0,0)
+#         else:
+#             self.hlayout.setStretch(0,50)
+
+
+# if  __name__ == "__main__":
+#     app=QApplication(sys.argv)
+#     UIWindow=UI()
+#     app.exec_() 
