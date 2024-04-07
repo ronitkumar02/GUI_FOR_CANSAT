@@ -219,12 +219,12 @@ class UI(QMainWindow):
             x_value = latest_data['x_value'].values[0]
             total_1 = latest_data['total_1'].values[0]
             total_2 = latest_data['total_2'].values[0]
-            status_text = (f'''ROLL:\t {total_1}
-PITCH: \t {total_2}
-YAW:\t {total_2}
+            status_text = (f'''ROLL:\t\t{total_1}
+PITCH:\t\t{total_2}
+YAW:\t\t{total_2}
 Temperature:\t{total_1}
 Gyro rpm:\t{total_2}
-Altitude:\t{total_2}''')
+Altitude:\t\t{total_2}''')
             self.more_data.setText(status_text)
     
     # Function to update battery status
@@ -252,11 +252,11 @@ Altitude:\t{total_2}''')
             total_1 = latest_data['total_1'].values[0]
             total_2 = latest_data['total_2'].values[0]
             status_text = (f'''Status:
-                            
-Shunt Voltage (V):{x_value}  Pack Voltage:{total_2} 
-Current (mA): {total_1}      Bottom Voltage (V):{total_2} 
-Bus Voltage (V): {total_2}   Top Voltage (V):{total_2}
-Power (mW):   {total_1}''')
+                           
+Shunt Voltage (V):\t\t{x_value}
+Current (mA):\t\t{total_1}
+Bus Voltage (V):\t\t{total_2}
+Power (mW):\t\t{total_1}''')
             self.status.setText(status_text)
     
     # Function for button click event
@@ -264,10 +264,10 @@ Power (mW):   {total_1}''')
         print("STARDUST")
     
     def update_voltage_satellties(self):
-        self.top_voltage.setText(f'Top Voltage: {x.values[0]}')
-        self.pack_voltage.setText(f'Pack Voltage: {x.values[0]}')
-        self.bottom_voltage.setText(f'Bottom Voltage: {x.values[0]}')
-        self.no_of_satellties.setText(f'No of Satellties: {x.values[0]}')
+        self.top_voltage.setText(f'Top Voltage:\t {x.values[0]}')
+        self.pack_voltage.setText(f'Pack Voltage:\t {x.values[0]}')
+        self.bottom_voltage.setText(f'Bottom Voltage:\t {x.values[0]}')
+        self.no_of_satellties.setText(f'No of Satellties: \t{x.values[0]}')
         pass
 
     # Function for expanded view button event
