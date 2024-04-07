@@ -14,7 +14,8 @@
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(9  , 2  , 44);</string>
+   <string notr="true">background-color: rgb(9  , 2  , 44);
+color:white;</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
@@ -123,10 +124,7 @@ border-radius: 0px solid;</string>
                </property>
                <property name="font">
                 <font>
-                 <pointsize>13</pointsize>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                 <underline>false</underline>
+                 <family>Space Grotesk</family>
                 </font>
                </property>
                <property name="styleSheet">
@@ -314,10 +312,13 @@ color:&quot;white&quot;;</string>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(9  , 2  , 44);
 border:2px solide rgb(18  , 10  , 69);
-border-radius: 10px;</string>
+border-radius: 10px;
+color:white;
+</string>
                  </property>
                  <property name="text">
-                  <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;NO OF SATELLTIES : &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                  <string>&lt;html&gt;
+&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;NO OF SATELLTIES : &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
                  <property name="indent">
                   <number>10</number>
@@ -349,7 +350,7 @@ border-radius: 10px;</string>
                </property>
                <property name="font">
                 <font>
-                 <family>MS Shell Dlg 2</family>
+                 <family>Space Grotesk</family>
                  <pointsize>11</pointsize>
                  <weight>50</weight>
                  <italic>false</italic>
@@ -361,7 +362,7 @@ border-radius: 10px;</string>
 border:2px solide rgb(9  , 2  , 44);
 border-radius: 10px;
 color:white;
-font: 11pt &quot;MS Shell Dlg 2&quot;;</string>
+font: 11pt;</string>
                </property>
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#ffffff;&quot;&gt;STATUS :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -451,7 +452,7 @@ border-radius: 10px;</string>
          <widget class="QFrame" name="frame_4">
           <property name="font">
            <font>
-            <pointsize>22</pointsize>
+            <family>Space Grotesk</family>
            </font>
           </property>
           <property name="styleSheet">
@@ -473,6 +474,12 @@ border-radius: 10px;</string>
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>35</height>
+              </size>
              </property>
              <property name="styleSheet">
               <string notr="true">background-color: rgb(18  , 10  , 69);
@@ -578,10 +585,11 @@ border-radius: 10px;</string>
                   <property name="styleSheet">
                    <string notr="true">background-color: rgb(18  , 10  , 69);
 border:2px solide rgb(18  , 10  , 69);
-border-radius: 10px;</string>
+border-radius: 10px;
+color: white;</string>
                   </property>
                   <property name="text">
-                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; color:#ffffff;&quot;&gt;COOL DATA :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; color:#ffffff;&quot;&gt;&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -645,7 +653,7 @@ border-radius: 10px;</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="latitube">
+                 <widget class="QLabel" name="latitude">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                     <horstretch>0</horstretch>
@@ -655,7 +663,8 @@ border-radius: 10px;</string>
                   <property name="styleSheet">
                    <string notr="true">background-color: rgb(9  , 2  , 44);
 border:2px solide rgb(18  , 10  , 69);
-border-radius: 10px;</string>
+border-radius: 10px;
+color:white;</string>
                   </property>
                   <property name="text">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; color:#ffffff;&quot;&gt;LATITUDE :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -669,7 +678,7 @@ border-radius: 10px;</string>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QLabel" name="longtition">
+                 <widget class="QLabel" name="longitude">
                   <property name="sizePolicy">
                    <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
                     <horstretch>0</horstretch>
@@ -679,7 +688,8 @@ border-radius: 10px;</string>
                   <property name="styleSheet">
                    <string notr="true">background-color: rgb(9  , 2  , 44);
 border:2px solide rgb(18  , 10  , 69);
-border-radius: 10px;</string>
+border-radius: 10px;
+color:&quot;white&quot;;</string>
                   </property>
                   <property name="text">
                    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; color:#ffffff;&quot;&gt;LONGITUDE :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -727,6 +737,12 @@ border-radius: 10px;</string>
                    <horstretch>0</horstretch>
                    <verstretch>0</verstretch>
                   </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>35</height>
+                  </size>
                  </property>
                  <property name="styleSheet">
                   <string notr="true">background-color: rgb(18  , 10  , 69);
