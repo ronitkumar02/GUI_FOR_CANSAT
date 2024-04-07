@@ -98,6 +98,13 @@ class UI(QMainWindow):
         self.status = self.findChild(QLabel, "status")
         self.timer1.timeout.connect(self.update_status)
         
+        # Set up top pack bottom voltage and no of satellites
+        self.top_voltage = self.findChild(QLabel, "top_voltage")
+        self.pack_voltage = self.findChild(QLabel, "pack_voltage")
+        self.bottom_voltage = self.findChild(QLabel, "bottom_voltage")
+        self.no_of_satellties = self.findChild(QLabel, "no_of_satellties")
+        self.timer1.timeout.connect(self.update_voltage_satellties)
+        
         # Show the UI
         self.showMaximized()
     
@@ -245,6 +252,7 @@ Altitude:\t{total_2}''')
             total_1 = latest_data['total_1'].values[0]
             total_2 = latest_data['total_2'].values[0]
             status_text = (f'''Status:
+                            
 Shunt Voltage (V):{x_value}  Pack Voltage:{total_2} 
 Current (mA): {total_1}      Bottom Voltage (V):{total_2} 
 Bus Voltage (V): {total_2}   Top Voltage (V):{total_2}
@@ -254,6 +262,13 @@ Power (mW):   {total_1}''')
     # Function for button click event
     def on_button_click(self):
         print("STARDUST")
+    
+    def update_voltage_satellties(self):
+        self.top_voltage.setText(f'Top Voltage: {x.values[0]}')
+        self.pack_voltage.setText(f'Pack Voltage: {x.values[0]}')
+        self.bottom_voltage.setText(f'Bottom Voltage: {x.values[0]}')
+        self.no_of_satellties.setText(f'No of Satellties: {x.values[0]}')
+        pass
 
     # Function for expanded view button event
     def expanded(self):

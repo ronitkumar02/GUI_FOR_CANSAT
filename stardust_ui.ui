@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1920</width>
+    <width>1919</width>
     <height>1200</height>
    </rect>
   </property>
@@ -326,17 +326,55 @@ color:white;
                 </widget>
                </item>
                <item>
-                <spacer name="verticalSpacer">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
+                <widget class="QLabel" name="top_voltage">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(9  , 2  , 44);
+border:2px solide rgb(18  , 10  , 69);
+border-radius: 10px;
+color:white;
+</string>
                  </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
+                 <property name="text">
+                  <string>TextLabel</string>
                  </property>
-                </spacer>
+                 <property name="indent">
+                  <number>10</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="pack_voltage">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(9  , 2  , 44);
+border:2px solide rgb(18  , 10  , 69);
+border-radius: 10px;
+color:white;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                 <property name="indent">
+                  <number>10</number>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="bottom_voltage">
+                 <property name="styleSheet">
+                  <string notr="true">background-color: rgb(9  , 2  , 44);
+border:2px solide rgb(18  , 10  , 69);
+border-radius: 10px;
+color:white;
+</string>
+                 </property>
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                 <property name="indent">
+                  <number>10</number>
+                 </property>
+                </widget>
                </item>
               </layout>
              </item>
@@ -361,8 +399,7 @@ color:white;
                 <string notr="true">background-color: rgb(9  , 2  , 44);
 border:2px solide rgb(9  , 2  , 44);
 border-radius: 10px;
-color:white;
-font: 11pt;</string>
+color:white;</string>
                </property>
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; color:#ffffff;&quot;&gt;STATUS :&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -861,7 +898,7 @@ color: white</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1920</width>
+     <width>1919</width>
      <height>18</height>
     </rect>
    </property>
