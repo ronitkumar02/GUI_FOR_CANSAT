@@ -29,17 +29,16 @@ class UI(QMainWindow):
         # Set window title and icon
         self.setWindowTitle("S.T.A.R.D.U.S.T")
         self.setWindowIcon(QtGui.QIcon('icons\\black.png'))
-        window = self
         
          # Load and register the custom font
-        font_id = QFontDatabase.addApplicationFont("SpaceGrotesk-Regular.ttf")
+        font_id = QFontDatabase.addApplicationFont("icons\\SpaceGrotesk-Regular.ttf")
         font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
         
         # Set font for all widgets
-        font = window.font()  # Get the default font
+        font = self.font()  # Get the default font
         font.setFamily(font_family)  # Change this to the desired font family
         font.setPointSize(12)  # Change this to the desired font size
-        set_font(window, font)
+        set_font(self, font)
         
         # Find and initialize UI elements
         # Set up a timer for updating the time
