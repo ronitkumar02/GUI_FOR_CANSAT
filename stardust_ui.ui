@@ -866,7 +866,7 @@ border-radius: 10px;</string>
                 <string notr="true">background-color: rgb(9  , 2  , 44);
 border:2px solide rgb(18  , 10  , 69);
 border-radius: 10px;
-color: white</string>
+color: white;</string>
                </property>
                <property name="text">
                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;justify&quot;&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>

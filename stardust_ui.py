@@ -286,7 +286,96 @@ Power (mW):\t\t{power_mw}''')
         self.view.setUrl(QUrl(url))
         
     def raw_data_update(self):
-        pass
+        raw_data_text = (f'''Roll: 0.009
+Yaw: 0.514
+Pitch: 0.3
+Acc X: 0.254
+Acc Y: 0.858
+Acc Z: 0.345
+Mag X: 0.74
+Mag Y: 0.237
+Mag Z: 0.486
+Gyro X: 0.308
+Gyro Y: 0.993
+Gyro Z: 0.32
+Vel X: 0.578
+Vel Y: 0.736
+Vel Z: 0.666
+Descent Rate: 0.749
+State: 0.264
+Temperature: 0.31
+Gyro Rpm: 0.546
+Humidity: 0.253
+Pressure: 0.059
+Battery: 33
+Gas Resistance: 0.566
+Altitude: 0.63
+Current Ma: 0.871
+Bus Voltage: 0.97
+Shunt Voltage: 0.561
+Power Mw: 0.599
+Pack Voltage: 0.354
+Bottom Voltage: 0.552
+Top Voltage: 0.722
+Second: 38
+Minute: 6
+Hour: 0
+Day: 12
+Month: 4
+Year: 2024
+Number Of Satellites: 0.891
+Latitude: 0.697
+Longitude: 0.51
+
+''')
+        if self.open_dial.isChecked():
+                        # Assuming self.raw_data is a Tkinter Label widget
+            # Assuming self.raw_data is a QLabel widget
+            current_font = self.raw_data.font()
+            current_font.setPointSize(10)  # Set font size to 15px
+
+            self.raw_data.setFont(current_font)  # Set the font for the QLabel widget
+            
+            lines = raw_data_text.split('\n')
+            each_length = len(lines) // 3
+            column1 = "\n".join(lines[:each_length])
+            column2 = "\n".join(lines[each_length:each_length*2])
+            column3 = "\n".join(lines[each_length*2:])
+
+            # Set the text of the GUI element with two columns side by side
+            max_length = max(len(column1), len(column2),len(column3))
+            column1_padded = column1.ljust(max_length, ' ')
+            column2_padded = column2.ljust(max_length, ' ')
+            column3_padded = column3.ljust(max_length, ' ')
+
+            # Combine columns side by side
+            combined_text = '\n'.join([f"{col1}\t\t{col2}\t\t{col3}" for col1, col2 , col3 in zip(column1_padded.split('\n'), column2_padded.split('\n'),column3_padded.split('\n'))])
+
+            # Set the text of the GUI element
+            self.raw_data.setText(combined_text)
+        else:
+            current_font = self.raw_data.font()
+            current_font.setPointSize(7)  # Set font size to 15px
+
+            self.raw_data.setFont(current_font)  # Set the font for the QLabel widget
+
+            # Split the text into two parts
+            lines = raw_data_text.split('\n')
+            each_length = len(lines) // 2
+            column1 = "\n".join(lines[:each_length])
+            column2 = "\n".join(lines[each_length:])
+
+            # Set the text of the GUI element with two columns side by side
+            max_length = max(len(column1), len(column2))
+            column1_padded = column1.ljust(max_length, ' ')
+            column2_padded = column2.ljust(max_length, ' ')
+
+            # Combine columns side by side with consistent tab spacing
+            combined_text = '\n'.join([f"{col1}\t\t{col2}" for col1, col2 in zip(column1_padded.split('\n'), column2_padded.split('\n'))])
+
+            print(combined_text)
+            self.raw_data.setText(combined_text)
+
 
 # Main block
 if __name__ == "__main__":
