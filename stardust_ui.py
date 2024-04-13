@@ -1,7 +1,7 @@
 import sys
 from datetime import datetime
 from itertools import count
-
+import serial
 import matplotlib.pyplot as plt
 import pandas as pd
 import psutil
@@ -29,6 +29,9 @@ class UI(QMainWindow):
         # Set window title and icon
         self.setWindowTitle("S.T.A.R.D.U.S.T")
         self.setWindowIcon(QtGui.QIcon('icons\\black.png'))
+        
+        # Initialize serial port for communication with XBee
+        self.serial_port = serial.Serial('/dev/ttyUSB0', 9600)  # Example port and baudrate, adjust as needed
         
          # Load and register the custom font
         font_id = QFontDatabase.addApplicationFont("icons\\SpaceGrotesk-Regular.ttf")
@@ -80,8 +83,14 @@ class UI(QMainWindow):
         self.battery.setRange(0, 100)
         
         # Set up button click event
-        self.button = self.findChild(QPushButton, "button_1")
-        self.button.clicked.connect(self.on_button_click)
+        self.cx_on = self.findChild(QPushButton, "cx_on")
+        self.cx_on.clicked.connect(self.on_button_cx_on)
+        
+        self.cal = self.findChild(QPushButton, "cal")
+        self.cal.clicked.connect(self.on_button_cal)
+        
+        self.ee = self.findChild(QPushButton, "ee")
+        self.ee.clicked.connect(self.on_button_ee)
         
         # Set up expanded view button event
         self.open_dial = self.findChild(QPushButton, "open_dialbox")
@@ -259,10 +268,6 @@ Bus Voltage (V):\t\t{bus_voltage}
 Power (mW):\t\t{power_mw}''')
             self.status.setText(status_text)
     
-    # Function for button click event
-    def on_button_click(self):
-        print("STARDUST")
-    
     def update_voltage_satellties(self):
         self.top_voltage.setText(f'Top Voltage:\t {data.tail(1)["top_voltage"].values[0]}')
         self.pack_voltage.setText(f'Pack Voltage:\t {data.tail(1)["pack_voltage"].values[0]}')
@@ -286,54 +291,9 @@ Power (mW):\t\t{power_mw}''')
         self.view.setUrl(QUrl(url))
         
     def raw_data_update(self):
-        raw_data_text = (f'''Roll: 0.009
-Yaw: 0.514
-Pitch: 0.3
-Acc X: 0.254
-Acc Y: 0.858
-Acc Z: 0.345
-Mag X: 0.74
-Mag Y: 0.237
-Mag Z: 0.486
-Gyro X: 0.308
-Gyro Y: 0.993
-Gyro Z: 0.32
-Vel X: 0.578
-Vel Y: 0.736
-Vel Z: 0.666
-Descent Rate: 0.749
-State: 0.264
-Temperature: 0.31
-Gyro Rpm: 0.546
-Humidity: 0.253
-Pressure: 0.059
-Battery: 33
-Gas Resistance: 0.566
-Altitude: 0.63
-Current Ma: 0.871
-Bus Voltage: 0.97
-Shunt Voltage: 0.561
-Power Mw: 0.599
-Pack Voltage: 0.354
-Bottom Voltage: 0.552
-Top Voltage: 0.722
-Second: 38
-Minute: 6
-Hour: 0
-Day: 12
-Month: 4
-Year: 2024
-Number Of Satellites: 0.891
-Latitude: 0.697
-Longitude: 0.51
-
-''')
+        current_font = self.raw_data.font()
         if self.open_dial.isChecked():
-                        # Assuming self.raw_data is a Tkinter Label widget
-            # Assuming self.raw_data is a QLabel widget
-            current_font = self.raw_data.font()
             current_font.setPointSize(10)  # Set font size to 15px
-
             self.raw_data.setFont(current_font)  # Set the font for the QLabel widget
             
             lines = raw_data_text.split('\n')
@@ -354,27 +314,66 @@ Longitude: 0.51
             # Set the text of the GUI element
             self.raw_data.setText(combined_text)
         else:
-            current_font = self.raw_data.font()
-            current_font.setPointSize(7)  # Set font size to 15px
-
+            current_font.setPointSize(6)  # Set font size to 15px
             self.raw_data.setFont(current_font)  # Set the font for the QLabel widget
+            raw_data_text = (f'''Roll: {data.tail(1)['roll'].values[0]}\t\tPressure: {data.tail(1)['pressure'].values[0]}
+Yaw: {data.tail(1)['yaw'].values[0]}\t\tBattery: {data.tail(1)['battery'].values[0]}
+Pitch: {data.tail(1)['pitch'].values[0]}\t\tGas Resistance: {data.tail(1)['gasResistance'].values[0]}
+Acc X: {data.tail(1)['acc_x'].values[0]}\t\tAltitude: {data.tail(1)['altitude'].values[0]}
+Acc Y: {data.tail(1)['acc_y'].values[0]}\t\tCurrent Ma: {data.tail(1)['current_ma'].values[0]}
+Acc Z: {data.tail(1)['acc_z'].values[0]}\t\tBus Voltage: {data.tail(1)['bus_voltage'].values[0]}
+Mag X: {data.tail(1)['mag_x'].values[0]}\t\tShunt Voltage: {data.tail(1)['shunt_voltage'].values[0]}
+Mag Y: {data.tail(1)['mag_y'].values[0]}\t\tPower Mw: {data.tail(1)['power_mw'].values[0]}
+Mag Z: {data.tail(1)['mag_z'].values[0]}\t\tPack Voltage: {data.tail(1)['pack_voltage'].values[0]}
+Gyro X: {data.tail(1)['gyro_x'].values[0]}\t\tBottom Voltage: {data.tail(1)['bottom_voltage'].values[0]}
+Gyro Y: {data.tail(1)['gyro_y'].values[0]}\t\tTop Voltage: {data.tail(1)['top_voltage'].values[0]}
+Gyro Z: {data.tail(1)['gyro_z'].values[0]}\t\tSecond: {data.tail(1)['second'].values[0]}
+Vel X: {data.tail(1)['vel_x'].values[0]}\t\tMinute: {data.tail(1)['minute'].values[0]}
+Vel Y: {data.tail(1)['vel_y'].values[0]}\t\tHour: {data.tail(1)['hour'].values[0]}
+Vel Z: {data.tail(1)['vel_z'].values[0]}\t\tDay: {data.tail(1)['day'].values[0]}
+Descent Rate: {data.tail(1)['vel_z'].values[0]}\tMonth: {data.tail(1)['month'].values[0]}
+Number Of Satellites: {data.tail(1)['number_of_satellites'].values[0]}\tYear: {data.tail(1)['year'].values[0]}
+Temperature: {data.tail(1)['temperature'].values[0]}\t\tState: {data.tail(1)['state'].values[0]}
+Gyro Rpm: {data.tail(1)['gyro_rpm'].values[0]}\t\tLatitude: {data.tail(1)['latitude'].values[0]}
+Humidity: {data.tail(1)['humidity'].values[0]}\t\tLongitude: {data.tail(1)['longitude'].values[0]}''')
+            # # Split the text into two parts
+            # lines = raw_data_text.split('\n')
+            # each_length = len(lines) // 2
+            # column1 = "\n".join(lines[:each_length])
+            # column2 = "\n".join(lines[each_length:])
 
-            # Split the text into two parts
-            lines = raw_data_text.split('\n')
-            each_length = len(lines) // 2
-            column1 = "\n".join(lines[:each_length])
-            column2 = "\n".join(lines[each_length:])
+            # # Set the text of the GUI element with two columns side by side
+            # max_length = max(len(column1), len(column2))
+            # column1_padded = column1.ljust(max_length, ' ')
+            # column2_padded = column2.ljust(max_length, ' ')
 
-            # Set the text of the GUI element with two columns side by side
-            max_length = max(len(column1), len(column2))
-            column1_padded = column1.ljust(max_length, ' ')
-            column2_padded = column2.ljust(max_length, ' ')
+            # # Combine columns side by side with consistent tab spacing
+            # combined_text = '\n'.join([f"{col1}\t\t{col2}" for col1, col2 in zip(column1_padded.split('\n'), column2_padded.split('\n'))])
 
-            # Combine columns side by side with consistent tab spacing
-            combined_text = '\n'.join([f"{col1}\t\t{col2}" for col1, col2 in zip(column1_padded.split('\n'), column2_padded.split('\n'))])
+            # print(combined_text)
+            self.raw_data.setText(raw_data_text)
+            
+    def on_button_cx_on(self):
+        command = "CX_ON\n"  # Command to send to XBee
+        self.send_command(command)
 
-            print(combined_text)
-            self.raw_data.setText(combined_text)
+    def on_button_cal(self):
+        command = "CAL\n"  # Command to send to XBee
+        self.send_command(command)
+
+    def on_button_ee(self):
+        command = "EE\n"  # Command to send to XBee
+        self.send_command(command)
+    
+    def send_command(self, command):
+        try:
+            # Send command over serial port
+            self.serial_port.write(command.encode())
+            print("Command sent:", command.strip())
+        except Exception as e:
+            print("Error sending command:", e)
+
+            
 
 
 # Main block

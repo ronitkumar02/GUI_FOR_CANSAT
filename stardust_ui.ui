@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1919</width>
+    <width>1855</width>
     <height>1200</height>
    </rect>
   </property>
@@ -172,21 +172,58 @@ border-radius: 10px;</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7" stretch="15,85">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="4,66,30">
+            <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,4,0,66,30">
+             <property name="topMargin">
+              <number>1</number>
+             </property>
              <item>
-              <widget class="QPushButton" name="button_1">
+              <widget class="QPushButton" name="cx_on">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>46</width>
+                 <height>46</height>
+                </size>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton{
+border: 2px solid;
+border-radius: 5px;
+border-color: rgb(255  , 255  , 255);
+padding:10px;
+}
+QPushButton::hover
+{
+background-color : #05B8CC;
+}</string>
+               </property>
+               <property name="text">
+                <string>CX ON</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="cal">
                <property name="enabled">
                 <bool>true</bool>
                </property>
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="Minimum">
                  <horstretch>1</horstretch>
                  <verstretch>1</verstretch>
                 </sizepolicy>
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>46</width>
+                 <width>0</width>
                  <height>46</height>
                 </size>
                </property>
@@ -204,6 +241,7 @@ border-radius: 10px;</string>
 border: 2px solid;
 border-radius: 5px;
 border-color: rgb(255  , 255  , 255);
+padding:10px;
 }
 QPushButton::hover
 {
@@ -211,11 +249,7 @@ background-color : #05B8CC;
 }</string>
                </property>
                <property name="text">
-                <string/>
-               </property>
-               <property name="icon">
-                <iconset>
-                 <normaloff>icons/final logo white (1).png</normaloff>icons/final logo white (1).png</iconset>
+                <string>CAL</string>
                </property>
                <property name="checkable">
                 <bool>false</bool>
@@ -228,6 +262,39 @@ background-color : #05B8CC;
                </property>
                <property name="autoExclusive">
                 <bool>false</bool>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="ee">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>46</width>
+                 <height>46</height>
+                </size>
+               </property>
+               <property name="cursor">
+                <cursorShape>PointingHandCursor</cursorShape>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QPushButton{
+border: 2px solid;
+border-radius: 5px;
+border-color: rgb(255  , 255  , 255);
+}
+QPushButton::hover
+{
+background-color : #05B8CC;
+}</string>
+               </property>
+               <property name="text">
+                <string>EE</string>
                </property>
               </widget>
              </item>
@@ -898,7 +965,7 @@ color: white;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1919</width>
+     <width>1855</width>
      <height>18</height>
     </rect>
    </property>
