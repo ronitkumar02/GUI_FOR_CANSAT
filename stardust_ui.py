@@ -306,6 +306,7 @@ Gyro Y: {data.tail(1)['gyro_y'].values[0]}\tAltitude: {data.tail(1)['altitude'].
 Gyro Z: {data.tail(1)['gyro_z'].values[0]}\tCurrent Ma: {data.tail(1)['current_ma'].values[0]}\t\tYear: {data.tail(1)['year'].values[0]}
 Vel X: {data.tail(1)['vel_x'].values[0]}\tBus Voltage: {data.tail(1)['bus_voltage'].values[0]}\t\tState: {data.tail(1)['state'].values[0]}
 Latitude: {data.tail(1)['latitude'].values[0]}\tLongitude: {data.tail(1)['longitude'].values[0]}\t\tBus Voltage: {data.tail(1)['bus_voltage'].values[0]}''')
+            
             # Set the text of the GUI element
             self.raw_data.setText(raw_data_text)
         else:
@@ -328,13 +329,13 @@ Vel Y: {data.tail(1)['vel_y'].values[0]}\t\tHour: {data.tail(1)['hour'].values[0
 Vel Z: {data.tail(1)['vel_z'].values[0]}\t\tDay: {data.tail(1)['day'].values[0]}
 Descent Rate: {data.tail(1)['vel_z'].values[0]}\tMonth: {data.tail(1)['month'].values[0]}
 Number Of Satellites: {data.tail(1)['number_of_satellites'].values[0]}\tYear: {data.tail(1)['year'].values[0]}
-Temperature: {data.tail(1)['temperature'].values[0]}\tState: {data.tail(1)['state'].values[0]}
+Temperature: {data.tail(1)['temperature'].values[0]}\t\tState: {data.tail(1)['state'].values[0]}
 Gyro Rpm: {data.tail(1)['gyro_rpm'].values[0]}\t\tLatitude: {data.tail(1)['latitude'].values[0]}
 Humidity: {data.tail(1)['humidity'].values[0]}\t\tLongitude: {data.tail(1)['longitude'].values[0]}''')
             self.raw_data.setText(raw_data_text)
             
     def on_button_cx_on(self):
-        command = "CX_ON\n"  # Command to send to XBee
+        command = "CX ON\n"  # Command to send to XBee
         self.send_command(command)
 
     def on_button_cal(self):
