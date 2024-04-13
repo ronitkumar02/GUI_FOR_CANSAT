@@ -2,12 +2,13 @@ import sys
 from datetime import datetime
 from itertools import count
 import serial
-import matplotlib.pyplot as plt
 import pandas as pd
-import psutil
+
+import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.backends.backend_qt5agg import \
     FigureCanvasQTAgg as FingureCanvas
+    
 from PyQt5 import QtGui, uic
 from PyQt5.QtCore import QTimer, QUrl
 from PyQt5.QtWebEngineWidgets import QWebEngineView
@@ -210,7 +211,7 @@ class UI(QMainWindow):
         self.ax4 = plt.subplot(235)
         self.ax5 = plt.subplot(236)
 
-        # plt.tight_layout()
+        plt.tight_layout()
         self.canvas.draw()
 
     # Function to update more data
@@ -291,7 +292,7 @@ Power (mW):\t\t{power_mw}''')
             current_font.setPointSize(10)  # Set font size to 15px
             self.raw_data.setFont(current_font)  # Set the font for the QLabel widget
             
-            raw_data_text = (f'''Roll: {data.tail(1)['roll'].values[0]}\t\tVel Y: {data.tail(1)['vel_y'].values[0]}\t\tVel X: {data.tail(1)['vel_x'].values[0]}
+            raw_data_text = (f'''Roll: {data.tail(1)['roll'].values[0]}\tVel Y: {data.tail(1)['vel_y'].values[0]}\t\tVel X: {data.tail(1)['vel_x'].values[0]}
 Yaw: {data.tail(1)['yaw'].values[0]}\tVel Z: {data.tail(1)['vel_z'].values[0]}\t\tShunt Voltage: {data.tail(1)['shunt_voltage'].values[0]}
 Pitch: {data.tail(1)['pitch'].values[0]}\tDescent Rate: {data.tail(1)['vel_z'].values[0]}\tPower Mw: {data.tail(1)['power_mw'].values[0]}
 Acc X: {data.tail(1)['acc_x'].values[0]}\tNumber Of Satellites: {data.tail(1)['number_of_satellites'].values[0]}\tPack Voltage: {data.tail(1)['pack_voltage'].values[0]}
@@ -300,7 +301,7 @@ Acc Z: {data.tail(1)['acc_z'].values[0]}\tGyro Rpm: {data.tail(1)['gyro_rpm'].va
 Mag X: {data.tail(1)['mag_x'].values[0]}\tHumidity: {data.tail(1)['humidity'].values[0]}\t\tSecond: {data.tail(1)['second'].values[0]}
 Mag Y: {data.tail(1)['mag_y'].values[0]}\tPressure: {data.tail(1)['pressure'].values[0]}\t\tMinute: {data.tail(1)['minute'].values[0]}
 Mag Z: {data.tail(1)['mag_z'].values[0]}\tBattery: {data.tail(1)['battery'].values[0]}\t\tHour: {data.tail(1)['hour'].values[0]}
-Gyro X: {data.tail(1)['gyro_x'].values[0]}\tGas Resistance: {data.tail(1)['gasResistance'].values[0]}\t\tDay: {data.tail(1)['day'].values[0]}
+Gyro X: {data.tail(1)['gyro_x'].values[0]}\tGas Resistance: {data.tail(1)['gasResistance'].values[0]}\tDay: {data.tail(1)['day'].values[0]}
 Gyro Y: {data.tail(1)['gyro_y'].values[0]}\tAltitude: {data.tail(1)['altitude'].values[0]}\t\tMonth: {data.tail(1)['month'].values[0]}
 Gyro Z: {data.tail(1)['gyro_z'].values[0]}\tCurrent Ma: {data.tail(1)['current_ma'].values[0]}\t\tYear: {data.tail(1)['year'].values[0]}
 Vel X: {data.tail(1)['vel_x'].values[0]}\tBus Voltage: {data.tail(1)['bus_voltage'].values[0]}\t\tState: {data.tail(1)['state'].values[0]}
