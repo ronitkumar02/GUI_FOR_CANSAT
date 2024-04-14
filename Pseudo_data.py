@@ -41,7 +41,7 @@ while True:
     "vel_y": round(random.random(), 3),
     "vel_z": round(random.random(), 3),
     "descent_rate": round(random.random(), 3),
-    "state": round(random.random(), 3),
+    "state": random.randint(1, 6),
     "temperature": round(random.random(), 3),
     "gyro_rpm": round(random.random(), 3),
     "humidity": round(random.random(), 3),
