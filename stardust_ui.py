@@ -70,7 +70,7 @@ class UI(QMainWindow):
         # Initialize timer for updating map
         self.map_update_timer = QTimer()
         self.map_update_timer.timeout.connect(self.update_map)
-        self.map_update_timer.start(1000)  # Update map every second
+        self.map_update_timer.start(10000)  # Update map every second
         
         # Set up display for raw data
         self.raw_data = self.findChild(QLabel, "raw_data")
@@ -279,13 +279,44 @@ Power (mW):\t\t{power_mw}''')
             self.hlayout.setStretch(0, 50)
     
     def update_map(self):
-        # Replace the example URL with your real-time tracking service URL
-        # Construct URL with latitude and longitude parameters
-        latitude = 13.0446948 # Replace with actual latitude
-        longitude = 77.5733936  # Replace with actual longitude
-        url = f"https://maps.google.com/maps/embed/v1/place?api=AIzaSyDaeKlbjo69fdMB03MABOg7iz3i_Rl5Q4&q={latitude},{longitude}"
-        self.view.setUrl(QUrl(url))
-        
+        api_key = 'Aviea1dpCl4OJ12L8zcNRJlufYPJS5QFDhK3mea2X-2LVBYkt-NW6GPHysB7bwei'
+        latitude =  data.tail(1)['latitude'].values[0] # Replace with actual latitude
+        longitude = data.tail(1)['longitude'].values[0]  # Replace with actual longitude
+
+        html_code = f"""
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key={api_key}"></script>
+</head>
+<body>
+    <div id="myMap" style="position:relative;width:100%;height:100%;"></div>
+    <script type="text/javascript">
+        function GetMap() {{
+            var latitude = {latitude}; // Replace with actual latitude
+            var longitude = {longitude}; // Replace with actual longitude
+
+            var map = new Microsoft.Maps.Map(document.getElementById('myMap'), {{
+                center: new Microsoft.Maps.Location(latitude, longitude),
+                mapTypeId: Microsoft.Maps.MapTypeId.aerial,
+                showZoomButtons: false,
+            }});
+            // Add a pushpin for the current location
+            var pin = new Microsoft.Maps.Pushpin(map.getCenter(), {{
+                color: 'blue',
+                title: 'Current Location'
+            }});
+            map.entities.push(pin);
+        }}
+    </script>
+</body>
+</html>
+"""
+        map_url = QUrl.fromUserInput("data:text/html;charset=utf-8," + html_code.strip())
+        self.view.setUrl(map_url)
+
     def raw_data_update(self):
         current_font = self.raw_data.font()
         if self.open_dial.isChecked():

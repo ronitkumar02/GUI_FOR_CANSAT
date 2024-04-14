@@ -10,7 +10,7 @@ fieldnames = ["x_axis","roll","yaw","pitch","acc_x","acc_y","acc_z","mag_x","mag
 
 x_axis = 0
 
-ser = serial.Serial('COM5',9600) # Change the port name to match your setup
+# ser = serial.Serial('COM5',9600) # Change the port name to match your setup
 
 with open('STARDUST_data.csv', 'w', newline='') as csv_file:
     csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -22,7 +22,7 @@ while True:
         
         current_time = datetime.datetime.now()
         # Generating random data for each column
-        data = ser.readline().decode().strip().split(",")
+        # data = ser.readline().decode().strip().split(",")
         info = {
     "x_axis": x_axis,
     "roll": round(random.random(), 3),
@@ -63,8 +63,8 @@ while True:
     "month": current_time.month,
     "year": current_time.year,
     "number_of_satellites": round(random.random(), 3),
-    "latitude": round(random.random(), 3),
-    "longitude": round(random.random(), 3)
+    "latitude": round(random.random(), 6)*100,
+    "longitude": round(random.random(), 6)*100
 }
         writer.writerow(info)  # Write the data to the CSV file
 
