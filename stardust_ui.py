@@ -284,7 +284,7 @@ Power (mW):\t\t{power_mw}''')
             self.hlayout.setStretch(0, 50)
     
     def update_map(self):
-        api_key = 'Aviea1dpCl4OJ12L8zcNRJlufYPJS5QFDhK3mea2X-2LVBYkt-NW6GPHysB7bwei'
+        api_key = 'ENTRY_YOUR_BING_MAP_API_KEY'
         latitude =  13.0453132 #data.tail(1)['latitude'].values[0] # Replace with actual latitude
         longitude = 77.5733936 #data.tail(1)['longitude'].values[0]  # Replace with actual longitude
 
