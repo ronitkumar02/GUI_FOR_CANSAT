@@ -21,12 +21,6 @@ import time
 import random
 import math
 
-
-with open('STARDUST_data.csv', 'w', newline='') as csv_file:
-    csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-    csv_writer.writeheader()
-
-
 def set_font(widget, font):
     widget.setFont(font)
     for child in widget.findChildren(QWidget):
