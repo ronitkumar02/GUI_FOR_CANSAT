@@ -31,6 +31,13 @@ It is a project aimed at acquiring telemetry data from a spacecraft equipped wit
 ![GUI Screenshot](https://github.com/ronitkumar02/GUI_FOR_CANSAT/blob/main/icons/Screenshot%202024-04-14%20231847.png)
 ![GUI Screenshot](https://github.com/ronitkumar02/GUI_FOR_CANSAT/blob/main/icons/Screenshot%202024-04-14%20231942.png)
 
+## API Reference
+#### Get all items
+Get your api_key from [Bing Maps APIs](https://www.bingmapsportal.com/?_gl=1*gq1sfr*_gcl_au*ODE2OTk5NjQ0LjE3MTMwOTYxMzk.)
+| Parameter | Type     | Description                |
+| :-------- | :------- | :------------------------- |
+| `api_key` | `string` | **Required**. Your API key |
+
 ## Notes
 - This project is designed to work with XBee-equipped spacecraft, but the code can be adapted for other telemetry systems with minimal modifications.
 - Feel free to explore and customize the UI elements, data visualization plots, and data processing logic according to your requirements.
