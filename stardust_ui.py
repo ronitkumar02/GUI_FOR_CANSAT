@@ -13,16 +13,29 @@ from PyQt5 import QtGui, uic
 from PyQt5.QtCore import QTimer, QUrl
 from PyQt5.QtWebEngineWidgets import QWebEngineView
 from PyQt5.QtWidgets import *
+import seaborn as sns
 from PyQt5.QtGui import QFontDatabase
+
+import csv
+import time
+import random
+import math
+
+
+with open('STARDUST_data.csv', 'w', newline='') as csv_file:
+    csv_writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+    csv_writer.writeheader()
+
 
 def set_font(widget, font):
     widget.setFont(font)
     for child in widget.findChildren(QWidget):
         set_font(child, font)
 
-STATE = ["STARTUP","WAITING","ASCENT","APOGEE","DESCENT","TOUCHDOWM"] #State map
+STATE = ["STARTUP","WAITING","ASCENT","APOGEE","DESCENT","TOUCHDOWN"] #State map
 
-# Define the UI class which inherits from QMainWindow
+ser = serial.Serial(port='COM15',baudrate=9600,timeout=1)
+
 class UI(QMainWindow):
     # Initialize the UI
     def __init__(self):
@@ -35,7 +48,7 @@ class UI(QMainWindow):
         
         # Initialize serial port for communication with XBee
         # self.serial_port = serial.Serial('/dev/ttyUSB0', 9600)  # Example port and baudrate, adjust as needed
-        
+
          # Load and register the custom font
         font_id = QFontDatabase.addApplicationFont("icons\\SpaceGrotesk-Regular.ttf")
         font_family = QFontDatabase.applicationFontFamilies(font_id)[0]
@@ -43,7 +56,7 @@ class UI(QMainWindow):
         # Set font for all widgets
         font = self.font()  # Get the default font
         font.setFamily(font_family)  # Change this to the desired font family
-        font.setPointSize(12)  # Change this to the desired font size
+        font.setPointSize(12)  # Change this to the desired font size #noteeeee
         set_font(self, font)
         
         # Find and initialize UI elements
@@ -74,6 +87,7 @@ class UI(QMainWindow):
         self.update_location_timer = QTimer()
         self.update_location_timer.timeout.connect(self.update_location)
         self.update_location_timer.start(3000)
+        
         
         # Set up display for raw data
         self.raw_data = self.findChild(QLabel, "raw_data")
@@ -136,7 +150,7 @@ class UI(QMainWindow):
         self.y_vals = []
         plt.plot()
         self.index = count()
-        plt.style.use('seaborn-whitegrid')
+        sns.set_style("whitegrid")
         
         # Define animation function
         def animate(i):
@@ -386,28 +400,28 @@ Humidity: {data.tail(1)['humidity'].values[0]}\t\tLongitude: {data.tail(1)['long
             self.raw_data.setText(raw_data_text)
             
     def on_button_cx_on(self):
-        command = "CX ON\n"  # Command to send to XBee
+        command = "\nCXON\n"  # Command to send to XBee
         self.send_command(command)
+        print("hello")
 
     def on_button_cal(self):
-        command = "CAL\n"  # Command to send to XBees
+        command = "\nCAL\n"  # Command to send to XBees
         self.send_command(command)
 
     def on_button_ee(self):
-        command = "EE\n"  # Command to send to XBee
+        command = "\nEE\n"  # Command to send to XBee
         self.send_command(command)
     
-    def send_command(self, command):
+    def send_command(self,command):
         try:
-            # Send command over serial port
-            self.serial_port.write(command.encode())
+            ser.write(command.encode()) # Send command over serial port
             print("Command sent:", command.strip())
         except Exception as e:
             print("Error sending command:", e)
 
-
 # Main block
 if __name__ == "__main__":
+
     app = QApplication(sys.argv)
     UIWindow = UI()
     app.exec_()
